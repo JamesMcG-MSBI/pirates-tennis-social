@@ -13,6 +13,11 @@ const el = (tag, className, text) => {
 };
 const person = id => state.players.find(p => p.id === id);
 const minutes = time => `${Math.max(0, Math.floor((Date.now() - time) / 60000))} min`;
+function clock(time) {
+  const node = el('span', '', minutes(time));
+  node.dataset.since = time;
+  return node;
+}
 function notice(message, error = false) {
   $('#notice').textContent = message;
   $('#notice').className = message ? `notice ${error ? 'error' : ''}` : '';
@@ -68,7 +73,9 @@ function playerRow(p, index, paused = false) {
   const details = el('div', 'player-details');
   const name = el('div', 'player-name', p.name);
   if (index === 0 && !paused) name.append(el('span', 'picker-tag', 'PICKS NEXT'));
-  details.append(name, el('div', 'player-meta', `Level ${p.level} · ${p.setsPlayed} ${p.setsPlayed === 1 ? 'set' : 'sets'} played${paused ? '' : ` · waiting ${minutes(p.queuedAt)}`}`));
+  const meta = el('div', 'player-meta', `Level ${p.level} · ${p.setsPlayed} ${p.setsPlayed === 1 ? 'set' : 'sets'} played`);
+  if (!paused) meta.append(' · waiting ', clock(p.queuedAt));
+  details.append(name, meta);
   const actions = el('div', 'player-actions');
   actions.append(action(paused ? 'Rejoin' : 'Break', () => command({ type: paused ? 'resume' : 'pause', playerId: p.id })));
   actions.append(action('Leave', () => {
@@ -86,7 +93,7 @@ function render() {
   $('#connection').className = online ? '' : 'offline';
   const playing = state.players.filter(p => p.status === 'playing').length;
   $('#stats').replaceChildren(...[
-    [state.queue.length, 'in the queue'], [playing, 'on court'], [state.history.length, 'sets finished'],
+    [state.queue.length, 'in the queue'], [playing, 'on court'], [state.completedSets ?? state.history.length, 'sets finished'],
   ].map(([value, label]) => {
     const item = el('div');
     item.append(el('strong', '', value), el('span', '', label));
@@ -129,7 +136,9 @@ function render() {
   $('#courts').replaceChildren(...state.courts.map(court => {
     const card = el('article', `court-card ${court.playerIds.length ? 'occupied' : ''}`);
     const heading = el('div', 'court-heading');
-    heading.append(el('h3', '', court.name), el('span', 'court-status', court.playerIds.length ? `PLAYING · ${minutes(court.startedAt)}` : 'AVAILABLE'));
+    const status = el('span', 'court-status', court.playerIds.length ? 'PLAYING · ' : 'AVAILABLE');
+    if (court.playerIds.length) status.append(clock(court.startedAt));
+    heading.append(el('h3', '', court.name), status);
     card.append(heading);
     if (court.playerIds.length) {
       const teams = el('div', 'court-teams');
@@ -157,9 +166,14 @@ async function refresh() {
     if (!response.ok) throw new Error('Connection failed.');
     const next = await response.json();
     // A poll started before a mutation must not overwrite its newer result.
+    const changed = !state || next.version > state.version || !online;
     if (!state || next.version >= state.version) state = next;
+    if (!online) notice('');
     online = true;
-    render();
+    if (changed) render();
+    else document.querySelectorAll('[data-since]').forEach(node => {
+      node.textContent = minutes(Number(node.dataset.since));
+    });
   } catch {
     online = false;
     $('#connection').textContent = 'Offline · reconnecting';

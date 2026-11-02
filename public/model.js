@@ -1,6 +1,7 @@
 export function newSession() {
   return {
     version: 0,
+    completedSets: 0,
     players: [],
     queue: [],
     courts: Array.from({ length: 3 }, (_, i) => ({
@@ -116,6 +117,7 @@ export function applyCommand(current, command, { id, now }) {
       assert(court && court.playerIds.length === 4, 'That court is not playing.');
       state.history.push({ teams: court.teams, startedAt: court.startedAt, finishedAt: now });
       state.history = state.history.slice(-50);
+      state.completedSets = (state.completedSets ?? state.history.length - 1) + 1;
       for (const playerId of court.playerIds) {
         const p = state.players.find(value => value.id === playerId);
         p.status = 'waiting';

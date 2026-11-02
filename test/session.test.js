@@ -55,6 +55,7 @@ test('finishing a court returns all four behind waiting players exactly once', (
   assert.equal(f.state.players[0].setsPlayed, 1);
   assert.equal(f.state.players[0].status, 'waiting');
   assert.equal(f.state.history.length, 1);
+  assert.equal(f.state.completedSets, 1);
   assert.deepEqual(f.state.courts[0].teams, []);
   assert.throws(() => f.run({ type: 'finish', courtId: '1' }));
 });
@@ -101,6 +102,17 @@ test('multiple courts retain unique player assignments and queue order', () => {
   f.run({ type: 'finish', courtId: '2' });
   f.run({ type: 'finish', courtId: '1' });
   assert.deepEqual(f.state.queue, ['p4', 'p5', 'p6', 'p7', 'p0', 'p1', 'p2', 'p3']);
+});
+
+test('completed set totals are retained beyond the history limit', () => {
+  const f = fixture(4);
+  for (let i = 0; i < 55; i++) {
+    f.run({ type: 'start', courtId: '1', playerIds: [...f.state.queue] });
+    f.run({ type: 'finish', courtId: '1' });
+  }
+  assert.equal(f.state.completedSets, 55);
+  assert.equal(f.state.history.length, 50);
+  assert.equal(f.state.players[0].setsPlayed, 55);
 });
 
 test('HTTP API persists state, rejects concurrent writes, and protects request boundaries', async t => {

@@ -11,6 +11,7 @@ const assets = new Map([
   ['/app.js', ['app.js', 'text/javascript; charset=utf-8']],
   ['/model.js', ['model.js', 'text/javascript; charset=utf-8']],
   ['/styles.css', ['styles.css', 'text/css; charset=utf-8']],
+  ['/icon.svg', ['icon.svg', 'image/svg+xml']],
 ]);
 
 export function createApp({ dataFile = resolve(root, 'data/session.json') } = {}) {
