@@ -1,0 +1,17 @@
+{
+  "name": "pirates-tennis-social",
+  "version": "1.0.0",
+  "description": "A shared peg board for drop-in social doubles tennis.",
+  "private": true,
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test",
+    "check": "node --check server.js && node --check public/model.js && node --check public/app.js"
+  },
+  "engines": { "node": ">=22" },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

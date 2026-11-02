@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#153d32">
+  <title>Pirates · Social tennis</title>
+  <link rel="icon" type="image/svg+xml" href="/icon.svg">
+  <link rel="stylesheet" href="/styles.css">
+  <script type="module" src="/app.js"></script>
+</head>
+<body>
+  <header class="masthead">
+    <a class="brand" href="/" aria-label="Pirates social tennis home"><span class="brand-mark">P<span>·</span></span><span>PIRATES<br><small>TENNIS CLUB</small></span></a>
+    <div class="session-label"><span class="live-dot"></span> SOCIAL SESSION <span id="connection">Connecting…</span></div>
+  </header>
+  <main>
+    <section class="intro">
+      <div><p class="eyebrow">LESS ORGANISING. MORE TENNIS.</p><h1>Your next set<br>starts here<span>.</span></h1><p class="intro-copy">Check in, mix it up, and enjoy the game.<br>Good tennis. Great company. Everyone gets a turn.</p></div>
+      <div class="session-summary"><span class="eyebrow">THE CLUBHOUSE BOARD</span><div id="stats" class="stats"></div><p>First in line picks. Everyone mixes in.</p></div>
+    </section>
+    <div id="notice" role="status" aria-live="polite"></div>
+    <div class="board-layout">
+      <section class="panel queue-panel" aria-labelledby="queue-title">
+        <div class="section-heading"><div><p class="eyebrow">READY WHEN YOU ARE</p><h2 id="queue-title">Waiting to play <span id="queue-count" class="count">0</span></h2></div><button id="check-in-link" class="button button-dark" type="button">+ Check in</button></div>
+        <div class="rule-note"><span class="rule-icon">↗</span><p><strong>First player picks the four.</strong><br>Choose three others from the first seven. Your organiser can help balance the teams.</p></div>
+        <div id="queue"></div>
+        <div class="selection-box">
+          <div class="selection-top"><div><strong id="pick-title">Waiting for players</strong><p id="pick-hint">Check in at least four players to start a set.</p></div><button id="suggest" class="button button-quiet" type="button">Suggest a four ✧</button></div>
+          <div id="team-preview" class="team-preview"></div>
+          <div class="start-row"><label for="court-choice">Next available court<select id="court-choice"></select></label><button id="start" class="button button-dark" type="button">Send to court ↗</button></div>
+        </div>
+        <div id="paused-section" hidden><h3>Taking a breather</h3><div id="paused"></div></div>
+      </section>
+      <aside class="right-column">
+        <section class="panel checkin-panel" aria-labelledby="checkin-title"><p class="eyebrow">JUST ARRIVED?</p><h2 id="checkin-title">You’re in good company.</h2><p>Add your name to the end of the queue.</p><form id="checkin"><label for="player-name">Your name</label><input id="player-name" name="name" maxlength="40" placeholder="e.g. Alex Morgan" autocomplete="name" required><label for="player-level">Playing level <span class="optional">for balanced suggestions</span></label><select id="player-level" name="level"><option value="1">1 · New to tennis</option><option value="2">2 · Getting into it</option><option value="3" selected>3 · Confident club player</option><option value="4">4 · Experienced player</option><option value="5">5 · Advanced / competitive</option></select><button class="button button-dark" type="submit">Join the queue <span>→</span></button></form><p class="small-note">Already here? Find your name on the board.<br>Taking a break keeps your sets played, not your queue spot.</p></section>
+        <section class="etiquette"><span class="eyebrow">THE SPIRIT OF SOCIAL TENNIS</span><h3>A new partner.<br>A good game.</h3><p>Mix with different players. When it’s busy, agree on short sets or timed rounds so everyone gets court time.</p><span class="court-sketch" aria-hidden="true"></span></section>
+      </aside>
+    </div>
+    <section class="courts-section" aria-labelledby="courts-title"><div class="section-heading"><div><p class="eyebrow">OUT ON THE COURTS</p><h2 id="courts-title">The games in play</h2></div><span class="muted">Finish a set to rejoin the queue</span></div><div id="courts" class="courts"></div></section>
+    <footer><span>PIRATES TENNIS CLUB <span class="footer-dot">·</span> THE SOCIAL BOARD</span><span>No rankings. Just a good hit.</span></footer>
+  </main>
+</body>
+</html>
