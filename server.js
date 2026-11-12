@@ -3,7 +3,7 @@ import { readFileSync, writeFileSync, mkdirSync, renameSync, existsSync } from '
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { randomUUID } from 'node:crypto';
-import { applyCommand, newSession } from './public/model.js';
+import { applyCommand, newSession, restoreSession } from './public/model.js';
 
 const root = dirname(fileURLToPath(import.meta.url));
 const assets = new Map([
@@ -15,7 +15,7 @@ const assets = new Map([
 ]);
 
 export function createApp({ dataFile = resolve(root, 'data/session.json') } = {}) {
-  let state = existsSync(dataFile) ? JSON.parse(readFileSync(dataFile, 'utf8')) : newSession();
+  let state = existsSync(dataFile) ? restoreSession(JSON.parse(readFileSync(dataFile, 'utf8'))) : newSession();
   const send = (res, status, value) => {
     res.writeHead(status, { 'Content-Type': 'application/json; charset=utf-8' });
     res.end(JSON.stringify(value));

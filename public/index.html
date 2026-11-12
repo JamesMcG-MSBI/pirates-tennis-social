@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#153d32">
+  <meta name="theme-color" content="#0b1630">
   <title>Pirates · Social tennis</title>
   <link rel="icon" type="image/svg+xml" href="/icon.svg">
   <link rel="stylesheet" href="/styles.css">
@@ -11,34 +11,77 @@
 </head>
 <body>
   <header class="masthead">
-    <a class="brand" href="/" aria-label="Pirates social tennis home"><span class="brand-mark">P<span>·</span></span><span>PIRATES<br><small>TENNIS CLUB</small></span></a>
-    <div class="session-label"><span class="live-dot"></span> SOCIAL SESSION <span id="connection">Connecting…</span></div>
+    <a class="brand" href="#board" aria-label="Pirates social tennis home"><span class="brand-mark" aria-hidden="true">P<span>/</span></span><span>PIRATES<small>TENNIS CLUB</small></span></a>
+    <nav class="main-nav" aria-label="Main navigation">
+      <a href="#board" id="board-link" aria-current="page">Session board</a>
+      <a href="#players" id="players-link">Players</a>
+    </nav>
+    <div class="session-label"><span class="live-dot" aria-hidden="true"></span><span id="connection" role="status">Connecting…</span></div>
   </header>
   <main>
-    <section class="intro">
-      <div><p class="eyebrow">LESS ORGANISING. MORE TENNIS.</p><h1>Your next set<br>starts here<span>.</span></h1><p class="intro-copy">Check in, mix it up, and enjoy the game.<br>Good tennis. Great company. Everyone gets a turn.</p></div>
-      <div class="session-summary"><span class="eyebrow">THE CLUBHOUSE BOARD</span><div id="stats" class="stats"></div><p>First in line picks. Everyone mixes in.</p></div>
-    </section>
     <div id="notice" role="status" aria-live="polite"></div>
-    <div class="board-layout">
-      <section class="panel queue-panel" aria-labelledby="queue-title">
-        <div class="section-heading"><div><p class="eyebrow">READY WHEN YOU ARE</p><h2 id="queue-title">Waiting to play <span id="queue-count" class="count">0</span></h2></div><button id="check-in-link" class="button button-dark" type="button">+ Check in</button></div>
-        <div class="rule-note"><span class="rule-icon">↗</span><p><strong>First player picks the four.</strong><br>Choose three others from the first seven. Your organiser can help balance the teams.</p></div>
-        <div id="queue"></div>
-        <div class="selection-box">
-          <div class="selection-top"><div><strong id="pick-title">Waiting for players</strong><p id="pick-hint">Check in at least four players to start a set.</p></div><button id="suggest" class="button button-quiet" type="button">Suggest a four ✧</button></div>
-          <div id="team-preview" class="team-preview"></div>
-          <div class="start-row"><label for="court-choice">Next available court<select id="court-choice"></select></label><button id="start" class="button button-dark" type="button">Send to court ↗</button></div>
+    <div id="board-screen">
+      <section class="intro" aria-labelledby="board-title">
+        <div class="intro-content">
+          <p class="eyebrow"><span class="live-badge">LIVE</span> SOCIAL DOUBLES / MATCHDAY</p>
+          <h1 id="board-title">NEXT UP.<br><span>GAME ON.</span></h1>
+          <p class="intro-copy">Your club. Your court. Your next four.</p>
         </div>
-        <div id="paused-section" hidden><h3>Taking a breather</h3><div id="paused"></div></div>
+        <div class="hero-graphic" aria-hidden="true"><div class="graphic-court"></div><span class="graphic-ball"></span><span class="graphic-label">PIRATES / SOCIAL DOUBLES</span></div>
+        <div class="session-summary"><span class="eyebrow">SESSION CENTRE</span><div id="stats" class="stats"></div></div>
       </section>
-      <aside class="right-column">
-        <section class="panel checkin-panel" aria-labelledby="checkin-title"><p class="eyebrow">JUST ARRIVED?</p><h2 id="checkin-title">You’re in good company.</h2><p>Add your name to the end of the queue.</p><form id="checkin"><label for="player-name">Your name</label><input id="player-name" name="name" maxlength="40" placeholder="e.g. Alex Morgan" autocomplete="name" required><label for="player-level">Playing level <span class="optional">for balanced suggestions</span></label><select id="player-level" name="level"><option value="1">1 · New to tennis</option><option value="2">2 · Getting into it</option><option value="3" selected>3 · Confident club player</option><option value="4">4 · Experienced player</option><option value="5">5 · Advanced / competitive</option></select><button class="button button-dark" type="submit">Join the queue <span>→</span></button></form><p class="small-note">Already here? Find your name on the board.<br>Taking a break keeps your sets played, not your queue spot.</p></section>
-        <section class="etiquette"><span class="eyebrow">THE SPIRIT OF SOCIAL TENNIS</span><h3>A new partner.<br>A good game.</h3><p>Mix with different players. When it’s busy, agree on short sets or timed rounds so everyone gets court time.</p><span class="court-sketch" aria-hidden="true"></span></section>
-      </aside>
+      <div class="board-toolbar"><p><span class="accent-slash">//</span> FIRST IN. NEXT ON. EVERYONE PLAYS.</p><button id="new-session" class="button button-outline" type="button" disabled>Start new session</button></div>
+      <div class="board-layout">
+        <section class="panel queue-panel" aria-labelledby="queue-title">
+          <div class="section-heading"><div><p class="eyebrow">01 / THE LINE-UP</p><h2 id="queue-title">Up next <span id="queue-count" class="count">0</span></h2></div><button id="check-in-link" class="button button-dark" type="button" aria-haspopup="dialog">+ Add player</button></div>
+          <div class="rule-note"><span class="rule-icon" aria-hidden="true">↗</span><p><strong>First player calls the four.</strong><br>Pick three others from the first seven. Choose teams on court. Picker returns last.</p></div>
+          <div id="queue"></div>
+          <div class="selection-box">
+            <div class="selection-top"><div><strong id="pick-title">Waiting for players</strong><p id="pick-hint">Check in at least four players to start a set.</p></div><button id="suggest" class="button button-quiet" type="button" disabled>Suggest a four</button></div>
+            <div id="selection-preview" class="selection-preview"></div>
+            <div class="start-row"><div class="court-assignment">Next court · automatically assigned<strong id="court-choice" aria-live="polite"></strong></div><button id="start" class="button button-dark" type="button" disabled>Send to court ↗</button></div>
+          </div>
+          <div id="paused-section" hidden><h3>On the sidelines</h3><div id="paused"></div></div>
+        </section>
+      </div>
+      <section class="courts-section" aria-labelledby="courts-title"><div class="section-heading"><div><p class="eyebrow">03 / COURTSIDE</p><h2 id="courts-title">In play</h2></div><span class="muted">Finish a set. Back to the line-up.</span></div><div id="courts" class="courts"></div></section>
     </div>
-    <section class="courts-section" aria-labelledby="courts-title"><div class="section-heading"><div><p class="eyebrow">OUT ON THE COURTS</p><h2 id="courts-title">The games in play</h2></div><span class="muted">Finish a set to rejoin the queue</span></div><div id="courts" class="courts"></div></section>
-    <footer><span>PIRATES TENNIS CLUB <span class="footer-dot">·</span> THE SOCIAL BOARD</span><span>No rankings. Just a good hit.</span></footer>
+    <section id="players-screen" hidden aria-labelledby="players-title">
+      <div class="directory-heading"><div><p class="eyebrow">PIRATES / PLAYER DIRECTORY</p><h1 id="players-title">THE <span>ROSTER.</span></h1><p class="intro-copy">One club. Every player. Ready for the next session.</p></div><span class="roster-count"><strong id="directory-count">0</strong> SAVED PLAYERS</span></div>
+      <div class="directory-layout">
+        <section class="panel directory-panel" aria-labelledby="saved-title">
+          <div class="section-heading"><h2 id="saved-title">Club players</h2><a class="text-link" href="#board">Back to the board ↗</a></div>
+          <label for="directory-search">Find a player</label><input id="directory-search" type="search" placeholder="Search by name" autocomplete="off">
+          <div id="directory-list"></div>
+        </section>
+        <section class="panel profile-panel" aria-labelledby="profile-title">
+          <p class="eyebrow">BUILD THE LINE-UP</p><h2 id="profile-title">Add a player</h2><p class="field-note">Save a profile now. Check in when it's game time.</p>
+          <form id="profile-form">
+            <label for="profile-name">Player name</label><input id="profile-name" name="name" maxlength="40" autocomplete="off" required>
+            <label for="profile-level">Playing level</label><select id="profile-level" name="level"><option value="1">1 · New to tennis</option><option value="2">2 · Getting into it</option><option value="3" selected>3 · Confident club player</option><option value="4">4 · Experienced player</option><option value="5">5 · Advanced / competitive</option></select>
+            <button id="save-profile" class="button button-maroon" type="submit" disabled>Save player →</button>
+            <button id="cancel-edit" class="button button-quiet" type="button" hidden>Cancel edit</button>
+          </form>
+          <p class="small-note">Edits also update checked-in players. Existing court assignments stay unchanged. To delete a profile, first remove that player from the session.</p>
+        </section>
+      </div>
+    </section>
+    <footer><span>PIRATES TENNIS CLUB <span class="footer-dot">/</span> SOCIAL DOUBLES</span><span>ALL GAME. ALL WELCOME.</span></footer>
   </main>
+  <dialog id="checkin-dialog" class="panel checkin-panel" aria-labelledby="checkin-title">
+    <div class="section-heading"><p class="eyebrow">CHECK IN / JOIN THE LINE-UP</p><button id="close-checkin" class="text-button" type="button" aria-label="Close check-in">Close ×</button></div>
+    <h2 id="checkin-title">Get in the game.</h2><p>Find a saved player or add a new name.</p>
+    <div id="checkin-notice" role="alert"></div>
+    <form id="checkin">
+      <label for="player-name">Player name</label>
+      <input id="player-name" name="name" list="known-players" maxlength="40" placeholder="Type a name to find a player" autocomplete="off" aria-describedby="checkin-profile-note" autofocus required>
+      <datalist id="known-players"></datalist>
+      <p id="checkin-profile-note" class="field-note">New players are saved automatically.</p>
+      <label for="player-level">Playing level <span class="optional">Used to suggest similar-ability players</span></label>
+      <select id="player-level" name="level"><option value="1">1 · New to tennis</option><option value="2">2 · Getting into it</option><option value="3" selected>3 · Confident club player</option><option value="4">4 · Experienced player</option><option value="5">5 · Advanced / competitive</option></select>
+      <button class="button button-maroon" type="submit" disabled>Join the queue <span>→</span></button>
+    </form>
+    <p class="small-note">Saved names and levels carry over to future sessions. <a href="#players">Manage players ↗</a></p>
+  </dialog>
 </body>
 </html>
